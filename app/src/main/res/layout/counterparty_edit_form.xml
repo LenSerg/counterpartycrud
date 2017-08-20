@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/photoTextEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="Photo"
+        />
+
+    <EditText
+        android:id="@+id/nameTextEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/photoTextEdit"
+        android:hint="Name"
+        />
+
+    <EditText
+        android:id="@+id/addressTextEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameTextEdit"
+        android:hint="Address"
+        />
+
+    <EditText
+        android:id="@+id/phoneTextEdit"
+        android:inputType="phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addressTextEdit"
+        android:hint="Phone"
+        />
+
+    <EditText
+        android:id="@+id/emailTextEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/phoneTextEdit"
+        android:hint="Email"
+        />
+
+    <EditText
+        android:id="@+id/websiteTextEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/emailTextEdit"
+        android:hint="Website"
+        />
+
+    <EditText
+        android:id="@+id/descriptionTextEdit"
+        android:inputType="textMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/websiteTextEdit"
+        android:hint="Description"
+        />
+
+
+
+</RelativeLayout>

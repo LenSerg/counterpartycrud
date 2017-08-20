@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:maxLines="1"
         android:hint="Photo"
         />
 
@@ -15,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/photoTextEdit"
+        android:maxLines="1"
         android:hint="Name"
         />
 
@@ -23,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameTextEdit"
+        android:maxLines="1"
         android:hint="Address"
         />
 
@@ -32,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/addressTextEdit"
+        android:maxLines="1"
         android:hint="Phone"
         />
 
@@ -40,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/phoneTextEdit"
+        android:maxLines="1"
         android:hint="Email"
         />
 
@@ -48,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/emailTextEdit"
+        android:maxLines="1"
         android:hint="Website"
         />
 

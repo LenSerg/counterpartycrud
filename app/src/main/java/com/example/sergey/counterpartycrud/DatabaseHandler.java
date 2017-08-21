@@ -70,6 +70,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return insertId;
     }
 
+    public Counterparty getCounterparty(int counterpartyId) {
+        Counterparty counterparty = null;
+
+        String sqlQuery = "SELECT * FROM " + TABLE_COUNTERPARTIES + " WHERE id = " + counterpartyId;
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sqlQuery, null);
+
+        if (cursor.moveToFirst()) {
+            counterparty = buildCounterparty(cursor);
+        }
+
+        cursor.close();
+        sqLiteDatabase.close();
+
+        return counterparty;
+    }
+
     public ArrayList<Counterparty> getCounterpartyList() {
         ArrayList<Counterparty> counterpartyList = new ArrayList<>();
 
@@ -80,16 +99,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Counterparty counterparty = new Counterparty(
-                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_ID))),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION))
-                        );
+                Counterparty counterparty = buildCounterparty(cursor);
                 counterpartyList.add(counterparty);
             } while (cursor.moveToNext());
 
@@ -98,5 +108,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return counterpartyList;
+    }
+
+    public long updateCounterparty(Counterparty counterparty) {
+        long updateId = -1;
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PHOTO, counterparty.getPhoto());
+        values.put(COLUMN_NAME, counterparty.getName());
+        values.put(COLUMN_ADDRESS, counterparty.getAddress());
+        values.put(COLUMN_PHONE, counterparty.getPhone());
+        values.put(COLUMN_EMAIL, counterparty.getEmail());
+        values.put(COLUMN_WEBSITE, counterparty.getWebsite());
+        values.put(COLUMN_DESCRIPTION, counterparty.getWebsite());
+
+        updateId = database.update(TABLE_COUNTERPARTIES, values, COLUMN_ID + " = ?",
+                new String[] {String.valueOf(counterparty.getId())});
+
+        return updateId;
+    }
+
+    private Counterparty buildCounterparty(Cursor cursor) {
+        return new Counterparty(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_ID))),
+                cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
     }
 }

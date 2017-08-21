@@ -2,8 +2,6 @@ package com.example.sergey.counterpartycrud;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public void showCouterpartyList() {
+    public void showCounterpartyList() {
         LinearLayout counterpartyListLayout = (LinearLayout) findViewById(R.id.counterpartyLinearLayout);
         counterpartyListLayout.removeAllViews();
 
@@ -24,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
                 counterpartyTextView.setPadding(30, 30, 30, 0);
                 counterpartyTextView.setText(counterparty.getName());
                 counterpartyTextView.setTag(counterparty.getId());
+                counterpartyTextView.setOnLongClickListener(new CounterpartyRecordOnLongClickListener());
                 counterpartyListLayout.addView(counterpartyTextView);
             }
         } else {
@@ -40,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button createCounterpartyButton = (Button) findViewById(R.id.createCounterpartyButton);
-        createCounterpartyButton.setOnClickListener(new OnClickListenerCreateCounterparty());
+        createCounterpartyButton.setOnClickListener(new CreateCounterpartyOnClickListener());
 
-        showCouterpartyList();
+        showCounterpartyList();
     }
 
 }

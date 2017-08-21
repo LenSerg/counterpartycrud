@@ -12,7 +12,7 @@ import android.widget.Toast;
  * Created by sergey on 20.08.17.
  */
 
-public class OnClickListenerCreateCounterparty implements View.OnClickListener {
+public class CreateCounterpartyOnClickListener implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         final Context context = view.getRootView().getContext();
@@ -50,9 +50,10 @@ public class OnClickListenerCreateCounterparty implements View.OnClickListener {
                                     Toast.makeText(context, "Counterparty added", Toast.LENGTH_SHORT).show();
                                 else
                                     Toast.makeText(context, "Unable to add counterparty", Toast.LENGTH_SHORT).show();
+
                                 dialogInterface.cancel();
 
-                                ((MainActivity) context).showCouterpartyList();
+                                ((MainActivity) context).showCounterpartyList();
                             }
                         }).show();
     }

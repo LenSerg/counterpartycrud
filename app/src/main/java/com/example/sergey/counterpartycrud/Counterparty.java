@@ -5,6 +5,7 @@ package com.example.sergey.counterpartycrud;
  */
 
 public class Counterparty {
+    private int id;
     private String photo;
     private String name;
     private String address;
@@ -24,6 +25,26 @@ public class Counterparty {
         this.email = email;
         this.website = website;
         this.description = description;
+    }
+
+    public Counterparty(int id, String photo, String name, String address, String phone,
+                        String email, String website, String description) {
+        this.id = id;
+        this.photo = photo;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.website = website;
+        this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPhoto() {

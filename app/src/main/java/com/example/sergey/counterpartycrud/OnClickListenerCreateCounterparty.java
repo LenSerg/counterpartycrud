@@ -51,6 +51,8 @@ public class OnClickListenerCreateCounterparty implements View.OnClickListener {
                                 else
                                     Toast.makeText(context, "Unable to add counterparty", Toast.LENGTH_SHORT).show();
                                 dialogInterface.cancel();
+
+                                ((MainActivity) context).showCouterpartyList();
                             }
                         }).show();
     }

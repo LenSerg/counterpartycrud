@@ -2,8 +2,11 @@ package com.example.sergey.counterpartycrud;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 /**
  * Created by sergey on 20.08.17.
@@ -65,5 +68,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         insertId = sqLiteDatabase.insert(TABLE_COUNTERPARTIES, null, contentValues);
         sqLiteDatabase.close();
         return insertId;
+    }
+
+    public ArrayList<Counterparty> getCounterpartyList() {
+        ArrayList<Counterparty> counterpartyList = new ArrayList<>();
+
+        String sqlQuery = "SELECT * FROM " + TABLE_COUNTERPARTIES;
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(sqlQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Counterparty counterparty = new Counterparty(
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_ID))),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_PHOTO)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_PHONE)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_WEBSITE)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION))
+                        );
+                counterpartyList.add(counterparty);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
+        return counterpartyList;
     }
 }

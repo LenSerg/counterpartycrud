@@ -27,10 +27,19 @@ public class CounterpartyRecordOnLongClickListener implements View.OnLongClickLi
         TextView photoTextView = counterpartyView.findViewById(R.id.photoTextView);
         TextView nameTextView = counterpartyView.findViewById(R.id.nameTextView);
         TextView addressTextView = counterpartyView.findViewById(R.id.addressTextView);
+        TextView phoneTextView = counterpartyView.findViewById(R.id.phoneTextView);
+        TextView emailTextView = counterpartyView.findViewById(R.id.emailTextView);
+        TextView websiteTextView = counterpartyView.findViewById(R.id.websiteTextView);
+        TextView descriptionTextView = counterpartyView.findViewById(R.id.descriptionTextView);
+
 
         photoTextView.setText("Photo: " + counterparty.getPhoto());
         nameTextView.setText("Name: " + counterparty.getName());
         addressTextView.setText("Address: " + counterparty.getAddress());
+        phoneTextView.setText("Phone: " + counterparty.getPhone());
+        emailTextView.setText("Email: " + counterparty.getEmail());
+        websiteTextView.setText("Website: " + counterparty.getWebsite());
+        descriptionTextView.setText("Description: " + counterparty.getDescription());
 
         new AlertDialog.Builder(context)
                 .setView(counterpartyView)
@@ -82,9 +91,9 @@ public class CounterpartyRecordOnLongClickListener implements View.OnLongClickLi
                                 counterparty.setWebsite(websiteEditText.getText().toString());
                                 counterparty.setDescription(descriptionEditText.getText().toString());
 
-                                long updateId = databaseHandler.updateCounterparty(counterparty);
+                                int updatedRow = databaseHandler.updateCounterparty(counterparty);
 
-                                if (updateId > 0)
+                                if (updatedRow > 0)
                                     Toast.makeText(context, "Counterparty updated", Toast.LENGTH_SHORT).show();
                                 else
                                     Toast.makeText(context, "Unable to update counterparty", Toast.LENGTH_SHORT).show();
@@ -95,6 +104,16 @@ public class CounterpartyRecordOnLongClickListener implements View.OnLongClickLi
                             }
                         }).show();
 
+    }
+
+    private void deleteRecord(int counterpartyId, Context context) {
+        int deletedRow = new DatabaseHandler(context).deleteCounteroarty(counterpartyId);
+        if (deletedRow  > 0 )
+            Toast.makeText(context, "Counterparty deleted", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, "Unable to delete counterparty", Toast.LENGTH_SHORT).show();
+
+        ((MainActivity) context).showCounterpartyList();
     }
 
     @Override
@@ -110,6 +129,8 @@ public class CounterpartyRecordOnLongClickListener implements View.OnLongClickLi
                             viewRecord(id, context);
                         } else if (i == 1) {
                             editRecord(id, context);
+                        } else if (i == 2)  {
+                            deleteRecord(id, context);
                         }
                         dialogInterface.dismiss();
                     }

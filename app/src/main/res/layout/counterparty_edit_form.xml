@@ -2,11 +2,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <Button
+        android:id="@+id/selectPhotoButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Select photo"
+        />
+
     <EditText
         android:id="@+id/photoTextEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/selectPhotoButton"
         android:maxLines="1"
         android:hint="Photo"
         />

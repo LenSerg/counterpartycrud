@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Intent intent = new Intent(this, CounterpartyEditActivity.class);
         intent.putExtra("counterparty", counterparty);
 
-        new AlertDialog.Builder(this).setTitle("Counterparty")
+        new AlertDialog.Builder(this).setTitle("Choose the option")
                 .setItems(new String[] {"View", "Edit", "Delete"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sergey.counterpartycrud.MainActivity">
+    tools:context="com.example.sergey.counterpartycrud.activities.MainActivity">
 
     <Button
         android:id="@+id/createCounterpartyButton"
@@ -24,8 +24,7 @@
             android:id="@+id/counterpartyLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            />
+            android:orientation="vertical"/>
     </ScrollView>
 
 </RelativeLayout>

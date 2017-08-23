@@ -1,10 +1,12 @@
-package com.example.sergey.counterpartycrud;
+package com.example.sergey.counterpartycrud.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.sergey.counterpartycrud.entities.Counterparty;
 
 import java.util.ArrayList;
 
@@ -110,8 +112,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return counterpartyList;
     }
 
-    public int updateCounterparty(Counterparty counterparty) {
-        int updatedRow = -1;
+    public long updateCounterparty(Counterparty counterparty) {
+        long updatedRow = -1;
 
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -129,7 +131,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return updatedRow;
     }
 
-    public int deleteCounteroarty(int counterpartyId) {
+    public int deleteCounterparty(int counterpartyId) {
         int deletedRow = -1;
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();

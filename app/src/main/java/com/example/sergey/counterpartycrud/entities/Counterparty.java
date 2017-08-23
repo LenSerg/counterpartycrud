@@ -1,10 +1,12 @@
-package com.example.sergey.counterpartycrud;
+package com.example.sergey.counterpartycrud.entities;
+
+import java.io.Serializable;
 
 /**
  * Created by sergey on 20.08.17.
  */
 
-public class Counterparty {
+public class Counterparty implements Serializable {
     private int id;
     private String photo;
     private String name;

@@ -9,22 +9,14 @@
         android:id="@+id/createCounterpartyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create a counterparty"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:text="@string/createCounterPartyLabel"
         />
-
-    <ScrollView
-        android:id="@+id/counterpartiesScrollView"
+    <ListView
+        android:id="@+id/counterpartiesListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/createCounterpartyButton"
-        >
-        <LinearLayout
-            android:id="@+id/counterpartyLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-    </ScrollView>
-
+        android:layout_height="match_parent"
+        android:layout_below="@+id/createCounterpartyButton">
+    </ListView>
 </RelativeLayout>

@@ -1,10 +1,15 @@
 package com.example.sergey.counterpartycrud.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -13,18 +18,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.sergey.counterpartycrud.utils.Operation;
 import com.example.sergey.counterpartycrud.entities.Counterparty;
 import com.example.sergey.counterpartycrud.database.DatabaseHandler;
 import com.example.sergey.counterpartycrud.R;
 
-import java.util.regex.Pattern;
+public class CounterpartyEditActivity extends AppCompatActivity implements View.OnClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
-public class CounterpartyEditActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-    private String operationType;
+    private Operation operationType;
     private Counterparty counterparty;
-    private EditText photoEdiText;
+    private String photoFilePath;
     private EditText nameEditText;
     private EditText addressEditText;
     private EditText phoneEditText;
@@ -39,8 +44,8 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
         setContentView(R.layout.activity_counterparty_edit);
 
         counterparty = new Counterparty();
+        photoFilePath = "";
         photoImageView = (ImageView) findViewById(R.id.photoImageView);
-        photoEdiText = (EditText) findViewById(R.id.photoTextEdit);
         nameEditText = (EditText) findViewById(R.id.nameTextEdit);
         addressEditText = (EditText) findViewById(R.id.addressTextEdit);
         phoneEditText = (EditText) findViewById(R.id.phoneTextEdit);
@@ -56,11 +61,10 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
         cancelButton.setOnClickListener(this);
 
         Intent intent = getIntent();
-        operationType = intent.getStringExtra("type");
-        if (!operationType.equals("create")) {
+        operationType = (Operation) intent.getSerializableExtra("type");
+        if (operationType != Operation.CREATE) {
             counterparty = (Counterparty) intent.getSerializableExtra("counterparty");
-
-            photoEdiText.setText(counterparty.getPhoto());
+            photoFilePath = counterparty.getPhoto();
             nameEditText.setText(counterparty.getName());
             addressEditText.setText(counterparty.getAddress());
             phoneEditText.setText(counterparty.getPhone());
@@ -69,9 +73,7 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
             descriptionEditText.setText(counterparty.getDescription());
             showPhoto();
         }
-
-        if (operationType.equals("view")) {
-            photoEdiText.setKeyListener(null);
+        if (operationType == Operation.VIEW) {
             nameEditText.setKeyListener(null);
             addressEditText.setKeyListener(null);
             phoneEditText.setKeyListener(null);
@@ -79,7 +81,6 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
             websiteEditText.setKeyListener(null);
             descriptionEditText.setKeyListener(null);
             selectPhotoButton.setVisibility(View.GONE);
-            photoEdiText.setVisibility(View.GONE);
             saveButton.setVisibility(View.GONE);
         }
     }
@@ -87,27 +88,34 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.selectPhotoButton) {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, 1);
+            if (isStoragePermissionGranted())
+                selectImage();
             return;
         }
         else if (view.getId() == R.id.saveButton) {
-            if (!textIsValid())
+            if (!isValidText())
                 return;
-            buildCounterparty();
+            counterparty.setPhoto(photoFilePath);
+            counterparty.setName(nameEditText.getText().toString().trim());
+            counterparty.setAddress(addressEditText.getText().toString().trim());
+            counterparty.setPhone(phoneEditText.getText().toString().trim());
+            counterparty.setEmail(emailEditText.getText().toString().trim());
+            counterparty.setWebsite(websiteEditText.getText().toString().trim());
+            counterparty.setDescription(descriptionEditText.getText().toString().trim());
+
             Intent intent = new Intent();
             DatabaseHandler handler = new DatabaseHandler(this);
-            if (operationType.equals("create")) {
+
+            if (operationType == Operation.CREATE) {
                 if (handler.addCounterparty(counterparty) > 0)
                     setResult(RESULT_OK, intent);
                 else
                     setResult(RESULT_CANCELED, intent);
-            } else if (operationType.equals("edit")) {
+            } else if (operationType == Operation.EDIT) {
                 if (handler.updateCounterparty(counterparty) > 0)
                     setResult(RESULT_OK, intent);
                 else
                     setResult(RESULT_CANCELED, intent);
-
             }
         }
         finish();
@@ -120,27 +128,42 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = null;
+            try {
+                cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                photoFilePath = cursor.getString(cursor.getColumnIndex(filePathColumn[0]));
+                showPhoto();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+        }
+    }
 
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            photoEdiText.setText(cursor.getString(cursor.getColumnIndex(filePathColumn[0])));
-
-            cursor.close();
-
-            showPhoto();
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            selectImage();
         }
     }
 
     private void showPhoto() {
-        photoImageView.setImageBitmap(BitmapFactory.decodeFile(photoEdiText.getText().toString()));
+        if (!photoFilePath.equals(""))
+            photoImageView.setImageBitmap(BitmapFactory.decodeFile(photoFilePath));
     }
 
-    private boolean textIsValid() {
+    private boolean isValidText() {
         boolean result = false;
         if (nameEditText.getText().toString().trim().equals("")) {
             nameEditText.setError("Name must not be empty");
+        } else if (phoneEditText.getText().toString().trim().equals("")) {
+            phoneEditText.setError("Phone must not be empty");
+        } else if (emailEditText.getText().toString().trim().equals("")) {
+            emailEditText.setError("Email must not be empty");
         } else if (!Patterns.PHONE.matcher(phoneEditText.getText().toString()).matches()) {
             phoneEditText.setError("Phone is not valid");
         } else if (!Patterns.EMAIL_ADDRESS.matcher(emailEditText.getText().toString()).matches()) {
@@ -154,13 +177,23 @@ public class CounterpartyEditActivity extends AppCompatActivity implements View.
         return result;
     }
 
-    private void buildCounterparty() {
-        counterparty.setPhoto(photoEdiText.getText().toString().trim());
-        counterparty.setName(nameEditText.getText().toString().trim());
-        counterparty.setAddress(addressEditText.getText().toString().trim());
-        counterparty.setPhone(phoneEditText.getText().toString().trim());
-        counterparty.setEmail(emailEditText.getText().toString().trim());
-        counterparty.setWebsite(websiteEditText.getText().toString().trim());
-        counterparty.setDescription(descriptionEditText.getText().toString().trim());
+    private boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                this.requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
+
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 1);
+    }
+
 }

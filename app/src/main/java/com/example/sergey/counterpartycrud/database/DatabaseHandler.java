@@ -10,10 +10,6 @@ import com.example.sergey.counterpartycrud.entities.Counterparty;
 
 import java.util.ArrayList;
 
-/**
- * Created by sergey on 20.08.17.
- */
-
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
@@ -55,67 +51,103 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public long addCounterparty(Counterparty counterparty) {
-        long insertId = -1;
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_PHOTO, counterparty.getPhoto());
-        contentValues.put(COLUMN_NAME, counterparty.getName());
-        contentValues.put(COLUMN_ADDRESS, counterparty.getAddress());
-        contentValues.put(COLUMN_PHONE, counterparty.getPhone());
-        contentValues.put(COLUMN_EMAIL, counterparty.getEmail());
-        contentValues.put(COLUMN_WEBSITE, counterparty.getWebsite());
-        contentValues.put(COLUMN_DESCRIPTION, counterparty.getDescription());
-
-        insertId = sqLiteDatabase.insert(TABLE_COUNTERPARTIES, null, contentValues);
-        sqLiteDatabase.close();
-
-        return insertId;
+        long insertCounterpartyId = -1;
+        SQLiteDatabase database = null;
+        try {
+            database = this.getWritableDatabase();
+            insertCounterpartyId = database.insert(TABLE_COUNTERPARTIES, null,
+                    getCounterpartyContentValues(counterparty));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (database != null)
+                database.close();
+        }
+        return insertCounterpartyId;
     }
 
-    public Counterparty getCounterparty(int counterpartyId) {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
-        Cursor cursor = sqLiteDatabase.query(TABLE_COUNTERPARTIES,
-                new String[] {COLUMN_ID, COLUMN_PHOTO, COLUMN_NAME, COLUMN_ADDRESS, COLUMN_PHONE, COLUMN_EMAIL, COLUMN_WEBSITE, COLUMN_DESCRIPTION},
-                COLUMN_ID + " = ? ", new String[] {String.valueOf(counterpartyId)}, null, null, null);
-
-        if (cursor != null)
+    public Counterparty getCounterparty(long counterpartyId) {
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        Counterparty counterparty = null;
+        try {
+            database = this.getWritableDatabase();
+            cursor = database.query(TABLE_COUNTERPARTIES,
+                    new String[]{COLUMN_ID, COLUMN_PHOTO, COLUMN_NAME, COLUMN_ADDRESS, COLUMN_PHONE,
+                            COLUMN_EMAIL, COLUMN_WEBSITE, COLUMN_DESCRIPTION},
+                    COLUMN_ID + " = ? ", new String[]{String.valueOf(counterpartyId)}, null, null, null);
             cursor.moveToFirst();
-
-        Counterparty counterparty = buildCounterparty(cursor);
-
-        cursor.close();
-        sqLiteDatabase.close();
-
+            counterparty = buildCounterparty(cursor);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null)
+                database.close();
+        }
         return counterparty;
     }
 
     public ArrayList<Counterparty> getCounterpartyList() {
         ArrayList<Counterparty> counterpartyList = new ArrayList<>();
-
-        String sqlQuery = "SELECT * FROM " + TABLE_COUNTERPARTIES;
-
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(sqlQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Counterparty counterparty = buildCounterparty(cursor);
-                counterpartyList.add(counterparty);
-            } while (cursor.moveToNext());
-
-            cursor.close();
-            sqLiteDatabase.close();
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = this.getWritableDatabase();
+            String sqlQuery = "SELECT * FROM " + TABLE_COUNTERPARTIES;
+            cursor = database.rawQuery(sqlQuery, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    Counterparty counterparty = buildCounterparty(cursor);
+                    counterpartyList.add(counterparty);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null)
+                database.close();
         }
-
         return counterpartyList;
     }
 
-    public long updateCounterparty(Counterparty counterparty) {
-        long updatedRow = -1;
+    public int updateCounterparty(Counterparty counterparty) {
+        int updatedRow = -1;
+        SQLiteDatabase database = null;
+        try {
+            database = this.getWritableDatabase();
+            ContentValues values = getCounterpartyContentValues(counterparty);
+            updatedRow = database.update(TABLE_COUNTERPARTIES, values, COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(counterparty.getId())});
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (database != null)
+                database.close();
+        }
+        return updatedRow;
+    }
 
-        SQLiteDatabase database = this.getWritableDatabase();
+    public int deleteCounterparty(long counterpartyId) {
+        int deletedRow = -1;
+        SQLiteDatabase database = null;
+        try {
+            database = this.getWritableDatabase();
+            deletedRow = database.delete(TABLE_COUNTERPARTIES, COLUMN_ID + " = ? ",
+                    new String[]{String.valueOf(counterpartyId)});
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (database != null)
+                database.close();
+        }
+        return deletedRow;
+    }
+
+    private ContentValues getCounterpartyContentValues(Counterparty counterparty) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PHOTO, counterparty.getPhoto());
         values.put(COLUMN_NAME, counterparty.getName());
@@ -124,22 +156,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_EMAIL, counterparty.getEmail());
         values.put(COLUMN_WEBSITE, counterparty.getWebsite());
         values.put(COLUMN_DESCRIPTION, counterparty.getWebsite());
-
-        updatedRow = database.update(TABLE_COUNTERPARTIES, values, COLUMN_ID + " = ?",
-                new String[] {String.valueOf(counterparty.getId())});
-
-        return updatedRow;
-    }
-
-    public int deleteCounterparty(int counterpartyId) {
-        int deletedRow = -1;
-
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        deletedRow = sqLiteDatabase.delete(TABLE_COUNTERPARTIES, COLUMN_ID + " = ? ",
-                new String[]{String.valueOf(counterpartyId)});
-        sqLiteDatabase.close();
-
-        return deletedRow;
+        return values;
     }
 
     private Counterparty buildCounterparty(Cursor cursor) {

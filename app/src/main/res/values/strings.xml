@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">CounterpartyCRUD</string>
+
+    <string name="selectPhotoButtonLabel">Select photo</string>
+    <string name="createCounterPartyLabel">Create counterparty</string>
+    <string name="nameTextEditLabel">Name</string>
+    <string name="addressTextEditLabel">Address</string>
+    <string name="phoneTextEditLabel">Phone</string>
+    <string name="emailTextEditLabel">Email</string>
+    <string name="websiteTextEditLabel">Website</string>
+    <string name="descriptionTextEditLabel">Description</string>
+    <string name="saveButtonLabel">Save</string>
+    <string name="cancelButtonLabel">Cancel</string>
+
+    <string name="emptyCouterpartyListText">No counterparties found</string>
+
+    <string name="counterpartyMenuTitle">Choose the option</string>
+    <string-array name="counterpartyMenuButtons">
+        <item>View</item>
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+    
+    <string name="successfulDeletingCounterpartyMessage">Counterparty was deleted</string>
+    <string name="failedDeletingCounterPartyMessage">Unable to delete counterparty</string>
+    <string name="successfulSavingCounterpartyMessage">Counterparty was saved</string>
+    <string name="failedSavingCounterpartyMessage">Unable to save counterparty</string>
+
+    <string name="nameTextViewListItem">Name</string>
+    <string name="phoneTextViewListItem">+79876543210</string>
+    <string name="emailTextViewListitem">default@domain.dom</string>
 </resources>

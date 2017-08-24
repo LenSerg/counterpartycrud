@@ -2,12 +2,8 @@ package com.example.sergey.counterpartycrud.entities;
 
 import java.io.Serializable;
 
-/**
- * Created by sergey on 20.08.17.
- */
-
 public class Counterparty implements Serializable {
-    private int id;
+    private long id;
     private String photo;
     private String name;
     private String address;
@@ -17,17 +13,6 @@ public class Counterparty implements Serializable {
     private String description;
 
     public Counterparty() { }
-
-    public Counterparty(String photo, String name, String address, String phone,
-                        String email, String website, String description) {
-        this.photo = photo;
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.website = website;
-        this.description = description;
-    }
 
     public Counterparty(int id, String photo, String name, String address, String phone,
                         String email, String website, String description) {
@@ -41,11 +26,11 @@ public class Counterparty implements Serializable {
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

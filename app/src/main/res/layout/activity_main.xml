@@ -6,17 +6,27 @@
     tools:context="com.example.sergey.counterpartycrud.activities.MainActivity">
 
     <Button
-        android:id="@+id/createCounterpartyButton"
+        android:id="@+id/addCounterpartyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/createCounterPartyLabel"
+        android:text="@string/addCounterPartyButtonLabel"
         />
     <ListView
         android:id="@+id/counterpartiesListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/createCounterpartyButton">
+        android:layout_below="@+id/addCounterpartyButton"
+        >
     </ListView>
+    <TextView
+        android:id="@+id/emptyCounterpartiesListViewText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/addCounterpartyButton"
+        android:layout_margin="10dp"
+        android:text="@string/emptyCounterpartyListText"
+        android:textSize="20sp"
+        />
 </RelativeLayout>

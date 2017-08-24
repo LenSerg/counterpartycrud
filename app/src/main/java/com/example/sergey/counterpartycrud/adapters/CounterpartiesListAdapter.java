@@ -47,9 +47,12 @@ public class CounterpartiesListAdapter extends BaseAdapter {
 
         Counterparty counterparty = getItem(position);
 
+        ImageView photoImageView = thisView.findViewById(R.id.photoImageViewFromList);
+
         if (!counterparty.getPhoto().equals(""))
-            ((ImageView) thisView.findViewById(R.id.photoImageViewFromList)).
-                setImageBitmap(BitmapFactory.decodeFile(counterparty.getPhoto()));
+            photoImageView.setImageBitmap(BitmapFactory.decodeFile(counterparty.getPhoto()));
+        else
+            photoImageView.setImageResource(R.drawable.default_avatar);
 
         ((TextView) thisView.findViewById(R.id.emailTextViewFromList)).setText(counterparty.getEmail());
         ((TextView) thisView.findViewById(R.id.nameTextViewFromList)).setText(counterparty.getName());

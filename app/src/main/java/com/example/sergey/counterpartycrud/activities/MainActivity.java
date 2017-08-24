@@ -31,12 +31,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         handler = new DatabaseHandler(this);
 
-        Button createCounterpartyButton = (Button) findViewById(R.id.createCounterpartyButton);
-        createCounterpartyButton.setOnClickListener(this);
+        Button addCounterpartyButton = (Button) findViewById(R.id.addCounterpartyButton);
+        addCounterpartyButton.setOnClickListener(this);
 
         ListView counterpartiesListView = (ListView) findViewById(R.id.counterpartiesListView);
         counterpartiesAdapter = new CounterpartiesListAdapter(this, handler.getCounterpartyList());
         counterpartiesListView.setAdapter(counterpartiesAdapter);
+        counterpartiesListView.setEmptyView(findViewById(R.id.emptyCounterpartiesListViewText));
         counterpartiesListView.setOnItemClickListener(this);
     }
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.createCounterpartyButton) {
+        if (view.getId() == R.id.addCounterpartyButton) {
             Intent intent = new Intent(this, CounterpartyEditActivity.class);
             intent.putExtra("type", Operation.CREATE);
             startActivityForResult(intent, 1);

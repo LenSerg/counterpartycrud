@@ -2,7 +2,7 @@
     <string name="app_name">CounterpartyCRUD</string>
 
     <string name="selectPhotoButtonLabel">Select photo</string>
-    <string name="createCounterPartyLabel">Create counterparty</string>
+    <string name="addCounterPartyButtonLabel">Add counterparty</string>
     <string name="nameTextEditLabel">Name</string>
     <string name="addressTextEditLabel">Address</string>
     <string name="phoneTextEditLabel">Phone</string>
@@ -12,7 +12,7 @@
     <string name="saveButtonLabel">Save</string>
     <string name="cancelButtonLabel">Cancel</string>
 
-    <string name="emptyCouterpartyListText">No counterparties found</string>
+    <string name="emptyCounterpartyListText">No counterparties found</string>
 
     <string name="counterpartyMenuTitle">Choose the option</string>
     <string-array name="counterpartyMenuButtons">
